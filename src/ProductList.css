@@ -107,6 +107,10 @@ body {
     margin-top: 10px;
 }
 
+.in-cart{
+    background-color: #ebb4ae !important;
+}
+
 .product-button:hover {
     background-color: #c0392b;
 }

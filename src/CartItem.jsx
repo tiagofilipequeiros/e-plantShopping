@@ -5,31 +5,58 @@ import './CartItem.css';
 
 const CartItem = ({ onContinueShopping }) => {
   const cart = useSelector(state => state.cart.items);
+  React.useEffect(()=>{
+    console.log("cart: ", cart)
+  },[cart])
   const dispatch = useDispatch();
 
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
- 
+    let totalAmount = 0;
+    cart.map((item)=>{
+        let number = parseInt(item?.cost?.replace('$', ''));
+        totalAmount += number * item?.quantity
+    })
+    return totalAmount;
   };
 
   const handleContinueShopping = (e) => {
-   
+    onContinueShopping(e)
   };
 
 
 
   const handleIncrement = (item) => {
+    const existingItem = cart.find(cartItem => cartItem.name === item.name);
+    if(existingItem){
+        dispatch(updateQuantity({name:item.name,amount: item.quantity + 1}))
+    }
   };
 
   const handleDecrement = (item) => {
-   
+    const existingItem = cart.find(cartItem => cartItem.name === item.name);
+    if(existingItem){
+        if(item.quantity - 1 > 0)
+            dispatch(updateQuantity({name:item.name,amount: item.quantity - 1}))
+        else   
+            handleRemove(item)
+    }
   };
 
   const handleRemove = (item) => {
+    dispatch(removeItem(item))
   };
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
+    let totalAmount = 0;
+    let number = parseInt(item?.cost?.replace('$', ''));
+    totalAmount += number * item?.quantity
+    return totalAmount;
+  };
+
+  const handleCheckoutShopping = (e) => {
+    alert('Functionality to be added for future reference');
   };
 
   return (
@@ -57,7 +84,7 @@ const CartItem = ({ onContinueShopping }) => {
       <div className="continue_shopping_btn">
         <button className="get-started-button" onClick={(e) => handleContinueShopping(e)}>Continue Shopping</button>
         <br />
-        <button className="get-started-button1">Checkout</button>
+        <button className="get-started-button1" onClick={()=>handleCheckoutShopping()}>Checkout</button>
       </div>
     </div>
   );
